@@ -1,0 +1,18 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+moto = "*"
+boto3 = "*"
+mlsolution = {editable = true, path = "."}
+pytest = "*"
+scikit-learn = "*"
+sagemaker = "*"
+pyyaml = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"

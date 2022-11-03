@@ -1,0 +1,32 @@
+version: 0.2
+
+env:
+  parameter-store:
+    TF_VAR_region: "/terraform/aws_region"
+    TF_VAR_terraform_state_lock_table_name: "/terraform/state_lock_table_name"
+    TF_VAR_terraform_state_bucket_name: "/terraform/state_bucket_name"
+    
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.9
+    commands:
+      - yum install -y yum-utils
+      - yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
+      - yum -y install terraform
+      - pip install --upgrade --force-reinstall "botocore>1.21.30" "boto3>1.18.30" "awscli>1.20.30"
+      - pip install -e . 
+      - jq -r '.default | to_entries[] | .key + .value.version' Pipfile.lock > requirements.txt
+      - pip install -r requirements.txt
+
+  build:
+    commands:
+      - terraform --version
+      - export TF_VAR_project_root_dir=$CODEBUILD_SRC_DIR
+      - $CODEBUILD_SRC_DIR/workflows/deploy_tf.sh
+      - $CODEBUILD_SRC_DIR/workflows/deploy_sagemaker_pipeline.sh
+
+  post_build:
+    commands:
+      - $CODEBUILD_SRC_DIR/workflows/sagemaker_acceptance_testing.sh
