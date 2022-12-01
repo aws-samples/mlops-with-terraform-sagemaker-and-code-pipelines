@@ -76,8 +76,6 @@ While in the `bootstrap` Terraform stack directory, run the following script to 
 $ ./configure_pipeline_stack.sh
 ```
 
-> :warning: INTERNAL PROSERVE EMPLOYEES ONLY – this will probably fail the first time it runs as you need to set up `git-defender`. Run the `git-defender` setup as required, and then re-run the script.
-
 ### Deploy the Terraform "Pipeline" stack:
 
 Move to the `pipeline` Terraform stack directory and deploy it via Terraform. 
